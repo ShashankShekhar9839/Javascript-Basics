@@ -15,13 +15,14 @@
            newObj : {
               location : 'No location inside',
            },
+            
         //    printfullName : function() {
         //    console.log(this.firstName + " " + this.lastName + " " + " " + this.newObj.location);   
         //    }
         }  
         
-        function printfullName(age) {
-            console.log(this.firstName + " " + this.lastName + " " + this.newObj.location + " and my age is " + age)
+        function printfullName(age, caller) {
+            console.log(this.firstName + " " + this.lastName + " " + this.newObj.location + " and my age is " + age + ' and i am called From ' + caller)
         }
 
         // if(firstPerson && firstPerson.printfullName) {
@@ -40,9 +41,19 @@
         // firstPerson.printfullName.call(secondPerson); 
         
 
-        printfullName.call(firstPerson, 18);
-        printfullName.call(secondPerson, 21)
+        printfullName.call(firstPerson, 18, 'call');
+        printfullName.call(secondPerson, 21, 'call'); 
+       
+        // the only difference between call and apply is that, apply method takes array of arguments while call takes normal arguments 
 
+        printfullName.apply(firstPerson, [18, 'apply']); 
+
+
+        // in bind method we are creating a new function that will be invoked later 
+        
+        let printByBind = printfullName.bind(firstPerson, 18, 'bind'); 
+        printByBind();
+        
 
     </script>
     
