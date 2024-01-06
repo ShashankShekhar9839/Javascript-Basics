@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+        let firstPerson = {
+           firstName : 'Shashank', 
+           lastName : 'Shekhar', 
+           location : 'Varanasi', 
+           newObj : {
+              location : 'No location inside',
+           }, 
+            
+        //    printfullName : function() {
+        //    console.log(this.firstName + " " + this.lastName + " " + " " + this.newObj.location);   
+        //    }
+        }  
+        
+        function printfullName(age, caller ) {
+            console.log(this.firstName + " " + this.lastName + " " + this.newObj.location + " and my age is " + age + ' and i am called From ' + caller + 'and ' )
+        }
+
+        // if(firstPerson && firstPerson.printfullName) {
+        //     firstPerson.printfullName();
+        // } 
+        let secondPerson = {
+            firstName : 'Amitesh', 
+            lastName : 'Kumar',
+            location : 'Mumbai',
+            newObj : {
+              location : 'Inside chaukaghat location',
+           },
+        } 
+        // this is called function borrowing  
+        // we have borrowed the function from firstPerson 
+        // firstPerson.printfullName.call(secondPerson); 
+        
+
+        printfullName.call(firstPerson, 18, 'call');
+        printfullName.call(secondPerson, 21, 'call'); 
+       
+        // the only difference between call and apply is that, apply method takes array of arguments while call takes normal arguments 
+
+        printfullName.apply(firstPerson, [18, 'apply']); 
+
+
+        // in bind method we are creating a new function that will be invoked later 
+        
+        let printByBind = printfullName.bind(firstPerson, 18, 'bind'); 
+        printByBind();
+        
+
+    </script>
+    
+</body>
+</html>
