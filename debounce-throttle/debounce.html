@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debounce and throttle</title>
+</head>
+<body>
+      
+    <input type="text" onkeyup="processChange()"/> 
+    <button onclick="processChange()">CLICK ME</button>
+
+
+    <script>
+    //   uses : Rate limiting of function calls 
+    // performance optimization 
+
+
+    // debouncing   
+
+    function debounce(func, timeout = 1000) {
+      let timer; 
+      return (...args) => {
+        clearTimeout(timer); 
+        timer = setTimeout(()=> {func.apply(this, args);}, timeout);
+      }
+    } 
+
+    function saveInput(a, b) {
+        console.log('saving data');
+        console.log('sum is ', a + b)
+    } 
+
+    const processChange = debounce(()=> saveInput(4,6));
+     
+    </script>
+</body>
+</html>

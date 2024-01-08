@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body> 
+    <input onkeydown="throttledFunction()"/> 
+
+    <script> 
+
+    // one example
+
+    //     function throttle(func, delay) {
+    //         let lastCallTime = 0; 
+    //         return function() {
+    //             const now = Date.now(); 
+
+    //             if(now - lastCallTime >= delay) {
+    //                 func.apply(this, arguments); 
+    //                 lastCallTime = now;
+    //             }
+    //         }
+    //     } 
+    //   let printSomething = () => {
+    //     console.log('hii, i am printing something exciting'); 
+    //   }
+    //     const throttledFunction = throttle(printSomething, 3000); 
+
+        // akhshay saini example 
+
+        const loggerFunc = () => {
+            console.count("throttled function");
+        }
+         
+        const throttle = (fn, limit) => {
+            let flag = true; 
+            return function() {
+                 let context = this;
+                 let args = arguments; 
+                 if(flag) {
+                    fn.apply(context, args);
+                    flag = false; 
+                    setTimeout(()=>{
+                        flag = true; 
+                    }, limit)
+                 }
+            }
+        } 
+
+        const betterLoggerFunction = throttle(loggerFunc, 1000); 
+
+        window.addEventListener('resize', betterLoggerFunction); 
+
+        const normalFunc = () => {
+            console.count('Normal Function');
+        } 
+
+        window.addEventListener('resize', normalFunc)
+
+    </script>
+</body>
+</html>
