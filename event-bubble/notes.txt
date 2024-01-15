@@ -1,0 +1,12 @@
+# Event bubbling and capturing 
+
+bubbling : bubble always comes from inside to outside (from bottom to top in dom tree) --- event will be bubble from child to parent and then parent to grand parent --- >  (first child event will be fired then parent's event will be fired and at the end grand parent's event will be fired) 
+
+
+capturing : it is completely opposite to the event bubbling. ---> events will be captured from top to bottom in dom tree . It is also called as event 'Trickling'. 
+
+# example : element.addEventListener('click', ()=>{}, useCapture);
+
+eventBubbling is used by default. 
+
+first captuirng happens and then bubbling happens if we pass third parameter as true or false. --- > According to W3C School. 
