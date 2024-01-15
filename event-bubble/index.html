@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Bubbling and Capturing</title> 
+    <style>
+        div {
+            min-height: 100px; 
+            min-width: 100px;
+            padding: 30px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div id="grand-parent">
+        <div id="parent">
+            <div id="child"></div>
+        </div>
+    </div> 
+
+    <script>
+        let grandParentElement = document.querySelector('#grand-parent'); 
+        let parentElement = document.querySelector('#parent'); 
+        let childElement = document.querySelector('#child'); 
+        
+        grandParentElement.addEventListener('click', function() {
+            console.log('grand element clicked');
+        }, false)
+
+        parentElement.addEventListener('click', function() {
+            console.log('parent element clicked');
+        }, true)
+
+        childElement.addEventListener('click', function() {
+            console.log('child element clicked');
+        }, true)
+
+    </script>
+</body>
+</html>
