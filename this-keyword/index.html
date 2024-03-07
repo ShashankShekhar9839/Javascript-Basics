@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>This Keyword</title>
+  </head>
+  <body>
+    <script>
+      "use strict";
+      //  this in global space
+      /* this keyword  in global space refers to global object, for browsers it global object is window */
+
+      // we should not pollute the global objects like window object
+
+      // var obj = {
+      //     name: 'Shashank'
+      // }
+
+      //   window.name = "yadav";
+
+      //   console.log(
+      //     this.innerWidth,
+      //     window.innerWidth,
+      //     typeof this,
+      //     typeof window
+      //   );
+      //   console.log(this === window);
+      //   console.log("hi there", this.name);
+      //   console.log(window);
+
+      // this in functional space
+
+      /* this keyword behaves differently in strict and non strict mode for function scope --- in non-strict mode -- it will window object and for strict mode -- it will be undefined */
+      //   function x() {
+      //     console.log(this)  // output - window/ undefined
+      //   }
+      //   x();  // output -- undefined
+      //   window.x(); // output --- window object
+
+      //   inside a object's method
+
+      // const obj = {
+      //     name : 'Shashank',
+      //     college : 'CSJM University',
+      //     printName : function() {
+      //         console.log(this);
+      //     }
+      // }
+
+      // obj.printName();
+
+      // call, apply and bind --- used for sharing methods
+
+      // const obj2 = {
+      //     name : 'Yadav',
+      // }
+      // obj.printName.call(obj2) // now in this case this is refering to obj2
+
+      // how does this behaves inside arrow functions
+      //   for arrow functions it retains the value of the enclosing lexical context
+
+      const arrowFunction = () => {
+        console.log(this);
+      };
+
+      const obj = {
+        name: "Shashank",
+        college: "CSJM University",
+        printName: () => {
+          console.log(this);
+        },
+      };
+
+      obj.printName(); // window object
+    </script>
+  </body>
+</html>
