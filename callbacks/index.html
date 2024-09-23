@@ -1,0 +1,73 @@
+<script>
+  /*  What is a callback ?
+
+    A callback is a function passed as an argument to another function,
+    to be "called back" (executed) at a later time or after a certain event has occurred.
+    Callbacks allow you to defer actions until a particular operation completes,
+    enabling asynchronous behavior in JavaScript.
+
+    Key points :
+
+    1. First class citizens : In js, functions are first-class citizens, means they can be
+    passed around like any other variable.
+
+    2. Higher-Order Functions: A function that takes another function as an argument
+    or returns a function is known as a higher-order function.
+    Callbacks are often used with higher-order functions. 
+
+    */
+
+  function higherOrderFunction(callback) {
+    console.log("### before callback");
+    callback();
+    console.log("### after callback");
+  }
+  function myCallBack() {
+    console.log("### my callback");
+  }
+
+  higherOrderFunction(myCallBack);
+
+  /* 
+  2. Synchronous vs. Asynchronous Callbacks 
+
+  1. Synchronous callbacks : executed immediately during the execution of higher order functions 
+  */
+
+  function greet(name, callback) {
+    console.log(`Hello, ${name}`);
+    callback();
+  }
+
+  function goodBye() {
+    console.log("Goodbye!");
+  }
+
+  greet("Shashank", goodBye);
+
+  /*
+  2. Asynchronous Callbacks : Executed after the higher-order functions has completed, often in response to events or after a delay 
+
+  Common Use Cases:
+
+  Timers: setTimeout, setInterval
+  I/O Operations: Reading files, making HTTP requests
+  Event Handling: User interactions like clicks, keypresses
+
+  */
+
+  function fetchData(callback) {
+    setTimeout(() => {
+      const data = { name: "Bob", age: 30 };
+      callback(data);
+    }, 2000); // Simulates a 2-second delay
+  }
+
+  function handleData(data) {
+    console.log("Data received:", data);
+  }
+
+  fetchData(handleData);
+  // After 2 seconds, outputs:
+  // Data received: { name: 'Bob', age: 30}
+</script>
