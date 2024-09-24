@@ -1,21 +1,259 @@
 <script>
-  /*  
-Asynchronous Programming : ---- 
+  /*
+  Asynchronous Programming : ----
 
-JavaScript is a single-threaded language, meaning it can execute one piece of code at a time. However, many operations—like network requests, file reading, or timers—are asynchronous, allowing the program to handle other tasks while waiting for these operations to complete.
+  JavaScript is a single-threaded language, meaning it can execute one piece of code at a time. However, many operations—like network requests, file reading, or timers—are asynchronous, allowing the program to handle other tasks while waiting for these operations to complete.
 
-Traditionally, asynchronous operations were handled using callbacks. While effective, callbacks can lead to "callback hell," making the code hard to read and maintain. Promises were introduced to address these challenges, offering a more elegant and manageable way to handle asynchronous operations. 
+  Traditionally, asynchronous operations were handled using callbacks. While effective, callbacks can lead to "callback hell," making the code hard to read and maintain. Promises were introduced to address these challenges, offering a more elegant and manageable way to handle asynchronous operations.
 
-Promises :  ---- 
- 
-A Promise in JavaScript is an object representing the eventual completion or failure of an asynchronous operation. It allows you to attach callbacks to handle the outcome (success or failure) of that operation, without nesting callbacks.
+  Promises :  ----
 
-A promise can be in one of three states:
+  A Promise in JavaScript is an object representing the eventual completion or failure of an asynchronous operation. It allows you to attach callbacks to handle the outcome (success or failure) of that operation, without nesting callbacks.
 
-Pending: The initial state, neither fulfilled nor rejected.
-Fulfilled: The operation completed successfully.
-Rejected: The operation failed.
-Once a promise is fulfilled or rejected, its state cannot change.
+  A promise can be in one of three states:
 
+  Pending: The initial state, neither fulfilled nor rejected.
+  Fulfilled: The operation completed successfully.
+  Rejected: The operation failed.
+  Once a promise is fulfilled or rejected, its state cannot change.
+
+  States of a Promise
+
+  Pending: The operation is ongoing. For example, a network request has been sent, but the response hasn't arrived yet.
+  Fulfilled: The operation completed successfully. For example, the network request received a response.
+  Rejected: The operation failed. For example, the network request encountered an error.
+
+  */
+
+  const myPromise = new Promise((resolve, reject) => {
+    // any async operation
+  });
+
+  const fetchData = new Promise((resolve, reject) => {
+    const data = "Sample data";
+    const error = null;
+
+    if (!error) {
+      resolve(data); // fullfill the promise
+    } else {
+      reject("Error occured"); // reject the promise
+    }
+  });
+
+  myPromise.then(
+    (value) => {
+      console.log("Fullfilled with", value);
+    },
+    (error) => {
+      console.log("Rejected with", error); // this is not a good practice to provide second callback to handle errors, instead use catch
+    }
+  );
+
+  myPromise
+    .then((value) => {
+      console.log("Fulfilled with:", value);
+    })
+    .catch((error) => {
+      console.log("Rejected with:", error);
+    });
+
+  /*
+  .finally()
+  The .finally() method is executed regardless of the promise's outcome. It's useful for cleanup actions.
+  */
+
+  myPromise
+    .then((value) => {
+      console.log("Fullfilled with", value);
+    })
+    .catch((error) => {
+      console.log("Rejected with", error);
+    })
+    .finally(() => {
+      console.log("operation completed");
+    });
+
+  /*
+  chaining promises :
+  promises can be chained to perform a sequence of async operations. Each .then() returns a new promise, allowing you to handle the result of previous one.
+
+  */
+
+  const fetchUser = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve({ userId: 1, name: "Shashank" });
+    }, 1000);
+  });
+
+  const fetchOrders = (user) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(["order1", "order2"]);
+      }, 1000);
+    });
+  };
+
+  fetchUser
+    .then((user) => {
+      console.log("User:", user);
+      return fetchOrders(user);
+    })
+    .then((orders) => {
+      console.log("orders:", orders);
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+    });
+  /*
+   In the above example:
+
+  fetchUser resolves after 1 second.
+  The first .then() logs the user and returns fetchOrders, which is another promise.
+  The second .then() waits for fetchOrders to resolve and logs the orders.
+  If any promise in the chain is rejected, the .catch() handles the error.
+
+   */
+
+  /*------   real life analogy  ------*/
+
+  const orderPizza = (pizzaType) => {
+    return new Promise((resolve, reject) => {
+      console.log(`Ordering a ${pizzaType} pizza ...`);
+
+      setTimeout(() => {
+        const isPizzaAvailable = true;
+        if (isPizzaAvailable) {
+          resolve(`Your ${pizzaType} pizza is ready`);
+        } else {
+          reject(`Sorry, ${pizzaTyPpe} pizza is unavailable`);
+        }
+      }, 3000);
+    });
+  };
+
+  // consuming the promise
+
+  orderPizza("Pepperoni")
+    .then((message) => {
+      console.log(message); //fullfilled
+    })
+    .catch((error) => {
+      console.log(error); // rejected
+    })
+    .finally(() => {
+      console.log("order process completed");
+    });
+
+  /* advanced javascript methods
+
+    Promise.all()
+
+    promise.all() takes an array of promises and returns a new promise that resolves when all input promises are fullfilled or rejects if any promise is rejected.
+
+    Use case : when you need to perform multiple async operations in parallel and wait for all of them to complete
+
+    */
+
+  const promise1 = Promise.resolve("Data 1");
+  const promise2 = Promise.resolve("Data 2");
+  const promise3 = Promise.resolve("Data 3");
+
+  Promise.all([promise1, promise2, promise3])
+    .then((results) => {
+      console.log("All promises fullfilled", results);
+    })
+    .catch((error) => {
+      console.log("One of the promises is rejected", error);
+    });
+
+  /*
+    Promise.race()
+
+    Promise.race() --- returns a promise that settles as soon as one of the input promises settles (either fullfilled or rejected).
+
+    Use case : when you need the result of the first completed promise, such as implementing a timeout for async operations.
+
+    */
+
+  const slowPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("Slow response");
+    }, 3000);
+  });
+
+  const fastPromise = new Promise((resolve) => {
+    setTimeout(() => resolve("Fast response"), 1000);
+  });
+
+  Promise.race([slowPromise, fastPromise])
+    .then((result) => {
+      console.log("First settled promise", result);
+    })
+    .catch((error) => {
+      console.log("Promise rejected", error);
+    });
+
+  /*
+    Prmise.allSettled
+    Promise.allSettled() waits for all input promises to settle, regardless of whether they are fulfilled or rejected. It returns an array of outcome objects.
+
+  Use Case: When you want to know the outcome of every promise without short-circuiting on the first rejection.
+
+    */
+
+  const promiseA = Promise.resolve("A resolved");
+  const promiseB = Promise.reject("B rejected");
+  const promiseC = Promise.resolve("C resolved");
+
+  Promise.allSettled([promiseA, promiseB, promiseC]).then((results) => {
+    results.forEach((result, index) => {
+      if (result.status === "fulfilled") {
+        console.log(`Promise ${index + 1} fulfilled with: ${result.value}`);
+      } else {
+        console.log(`Promise ${index + 1} rejected with: ${result.reason}`);
+      }
+    });
+  });
+
+  /*
+    catching errors
+    use .catch() to handle any errors that occure in the promise chain
+    */
+
+  fetchData()
+    .then((data) => processData(data))
+    .catch((error) => {
+      console.error("An error occurred:", error);
+    });
+
+  /*
+    throwing errors in .then() 
+    You can throw errors inside .then() callbacks to propagate them to next .catch(); 
+    
+     */
+
+  Promise.resolve()
+    .then(() => {
+      throw new Error("Something went wrong");
+    })
+    .catch((error) => {
+      console.error(error.message); // Output : Something went wrong
+    });
+
+  /*
+Handling multiple errors : 
+when chaining multiple .then() calls, a single .catch() at the end can handle errors from any part of the chain 
 */
+
+  Promise.resolve()
+    .then(() => {
+      // some operation
+    })
+    .then(() => {
+      // another operation that might fail
+      throw new Error("Failure in second operation");
+    })
+    .catch((error) => {
+      console.error("Caught error", error.message);
+    });
 </script>
