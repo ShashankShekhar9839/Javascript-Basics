@@ -256,4 +256,101 @@ when chaining multiple .then() calls, a single .catch() at the end can handle er
     .catch((error) => {
       console.error("Caught error", error.message);
     });
+
+  /* async await syntax 
+    
+    Introduced in ES2017, async and await are syntactic sugar over promises, making asynchronous code appear synchronous and easier to read. 
+
+    an async function returns a promise. Inside an async function, you can use await to pause execution until a promise is settled. 
+    
+    */
+
+  async function myAsyncFunction() {
+    return "Hello, world";
+  }
+
+  myAsyncFunction.then((message) => {
+    console.log(message); // output: Hello, world
+  });
+
+  // same thing using await
+
+  let asyncFetchData = () => {
+    return "Fetching Data";
+  };
+
+  async function fetchAndProcessData() {
+    try {
+      const data = await asyncFetchData();
+      const processed = await processData(data);
+      console.log(processed);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  fetchAndProcessData();
+
+  /* benefits of async await 
+ Readability: Code reads top-to-bottom, similar to synchronous code.
+`Error Handling: Use try...catch blocks for handling errors, which is more intuitive.
+`Debugging: Easier to debug as the stack traces are cleaner.
+  */
+
+  /* common mistakes with promises 
+
+  1. Forgetting to return Promises in chains  -- If you don't return a promise inside a .then(), the next .then() may receive undefined. 
+  */
+
+  // incorrect code ---
+
+  fetchData()
+    .then((data) => {
+      processData(data); // No return
+    })
+    .then((processed) => {
+      console.log(processed); // undefined
+    });
+
+  // correct code ---
+
+  fetchData()
+    .then((data) => {
+      return processData(data); // Return the promise
+    })
+    .then((processed) => {
+      console.log(processed); // Processed data
+    });
+
+  /*
+    
+    2. Not handling all rejections --- 
+    Failing to catch errors can lead to unhandled promise rejections, which may crash the application in some enviroments. So always attach a .catch() at the end of promise chains. 
+
+    3. Mixing callbacks and promises improperly ---
+    Combining callbacks with promises without proper handling can lead to unexpected behaviors.
+
+   Solution: Stick to one approach. If using promises, avoid traditional callbacks   within them.
+    
+   4. Creating promises inside loops without proper handling --- 
+   Creating multiple promises inside loops without managing their execution can cause performance issues or unexpected results. 
+   Solution: Use Promise.all() or similar methods to handle multiple promises effectively. 
+
+   5. Assuming promises are synchronous --- 
+
+   Promises are asynchronous. Code after a promise runs immediately, not waiting for the promise to settle.
+    */
+
+  const promise = Promise.resolve("Done");
+  console.log("Before");
+  promise.then((msg) => console.log(msg));
+  console.log("After");
+
+  /*
+  Promises revolutionized asynchronous programming in JavaScript by providing a cleaner, more manageable approach compared to traditional callbacks. They offer robust error handling, composability, and improved readability, especially when combined with async and await syntax.
+
+Understanding promises is essential for modern JavaScript development, as they underpin many features and APIs, including fetch, async functions, and various libraries and frameworks. By mastering promises, you can write more efficient, readable, and maintainable asynchronous code.
+  
+  
+  */
 </script>
