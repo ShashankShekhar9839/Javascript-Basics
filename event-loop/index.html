@@ -1,0 +1,150 @@
+<script>
+  /*
+     Event loop is a core concept in Javascript, essential to understanding how javascript handles async operations. Since js is a single-threaded, it can execute only one piece of code at a time. However, js can still perform async tasks like handling user input, network requests or timers without blocking the main thread. This is made possible by the event loop. 
+
+     Important aspects of event loop : --- 
+
+     1. Call stack --- 
+
+     The call stack is where js keeps track of what function is currently being executed and what functions are called from within that function. It's a LIFO (Last in First Out ) data structure. 
+    
+    */
+
+  function first() {
+    console.log("First");
+  }
+
+  function second() {
+    first();
+    console.log("Second");
+  }
+
+  second();
+
+  /* Here is how the above code will get executed 
+  
+  > When second() is called, it's added to the call stack. 
+  > Inside second(), first() is called, so it's added to the call stack. 
+  > first() completes, and it is removed from the stack. 
+  > After first() finishes, second() finishes, and it is removed from the stack. 
+  At any time, only the function on the top of the call stack is running.
+  */
+
+  /*
+  2.  WEB APIs  --- 
+
+  Js has access to web apis provide by the browser (like setTimeout, fetch, DOM events, etc) that runs outside of the call stack. These APIs handle time-consuming tasks like network requests and set timers without blocking the main thread. 
+
+  When an asyn task is triggered (e.g. a timer, an event listener, or a fetch request), the browser offloads this task to the WEB APIs. Once the Web api completes the task, it moves the callback function associated with the task to the callback queue. 
+  
+  */
+
+  /*
+   3. Callback Queue (Task Queue) --- 
+
+   The callback queue (or task queue) holds the functions that are ready to be executed. Thes functions are queued when async operations complete (like a timer, an HTTP request, or an event listener firing). 
+
+   4. Event loop --- 
+
+   The event loop is the mechanism that ensures the proper execution of async code. It constantly check two things : 
+
+   > Call stack : is the call stack empty ? 
+   > Callback queue : is there any callback in the queue waiting to be executed ?  
+
+   If the call stack is empty (meaning the synchronous code is finished), the event loop will take the first function from the callback queue and push it to the call stack for execution. 
+  
+  */
+
+  console.log("Start");
+
+  setTimeout(() => {
+    console.log("Timer finished");
+  }, 2000);
+
+  console.log("End");
+
+  /*
+  
+ Here's what happens:
+
+The console.log("Start") is executed and removed from the call stack.
+The setTimeout() function is called, but it's asynchronous. The timer is set in the Web API (which waits 2 seconds), and setTimeout() itself is removed from the call stack.
+The console.log("End") is executed and removed from the call stack.
+After 2 seconds, the timer is done, so the callback from setTimeout() (console.log("Timer finished")) is placed in the callback queue.
+The event loop notices the call stack is empty, so it takes the callback from the callback queue and pushes it to the call stack for execution.
+
+Order of execution:
+
+Start
+End
+Timer finished (after 2 seconds)
+  */
+
+  /*
+  5 : Microtask Queue : --- 
+
+  In addition to the callback queue, js has a microtask queue (or job queue). 
+  Promises and mutation observer callbacks go here. The event loop gives higher priority to the microtasks queue than the callback queue. 
+
+  After each task from the call stack is executed, the event loop checks the microtasks queue first. If there are any microtasks, they are executed before moving to the callback queue.
+  
+  
+  */
+
+  console.log("Start");
+
+  setTimeout(() => {
+    console.log("Timeout");
+  }, 0);
+
+  Promise.resolve().then(() => {
+    console.log("Promise");
+  });
+
+  console.log("End");
+
+  /*
+  
+  Execution order:
+
+"Start" is logged (synchronous code).
+setTimeout() is sent to the Web API.
+Promise.resolve().then() adds its callback to the microtasks queue.
+"End" is logged.
+Before moving to the callback queue (setTimeout), the event loop checks the microtasks queue and executes the promise callback.
+Finally, the event loop moves to the callback queue and executes the setTimeout() callback. 
+
+output --- 
+Start 
+End 
+Promise 
+Timeout
+  
+  */
+
+  /*
+  6. Key Points of the Event Loop -- 
+
+Single-threaded nature: JavaScript executes one task at a time (synchronous code) using the call stack.
+Asynchronous code: The event loop enables JavaScript to handle asynchronous operations (e.g., timers, network requests) without blocking.
+Web APIs: Browser provides Web APIs to manage asynchronous tasks. Once complete, the callbacks are queued for execution.
+Callback Queue: Contains callbacks from asynchronous tasks like setTimeout and events. The event loop processes them after the call stack is empty.
+Microtasks Queue: Contains tasks like promise resolution. The event loop prioritizes microtasks over callback queue tasks.
+Starvation of the callback queue: Since microtasks are prioritized, an infinite loop of promise chains can starve the callback queue, preventing other tasks like setTimeout from running.
+
+
+Event Loop Visual Representation --- 
+
+
+Call Stack: Synchronous tasks are executed one by one.
+Web APIs: Asynchronous tasks (e.g., timers, fetch requests) are handled in the background.
+Microtasks Queue: Promise resolutions and other microtasks wait here.
+Callback Queue: Callbacks from asynchronous tasks (like setTimeout) wait here.
+Event Loop: Continuously checks the call stack and processes tasks from the microtasks queue first, then the callback queue.
+   
+Conclusion --- 
+
+The event loop is what allows JavaScript to be asynchronous despite its single-threaded nature. It manages the execution of synchronous and asynchronous code, allowing tasks like network requests or timers to be handled without blocking the main execution thread, ensuring efficient execution of both immediate and deferred operations. Understanding the event loop is crucial for mastering asynchronous programming in JavaScript.
+  
+  */
+</script>
