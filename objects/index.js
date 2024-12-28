@@ -5,6 +5,15 @@ JS Objects are non primitive data-types(store multiple values)
 let user = new Object(); // object constructor syntax
 let newUser = {}; // object literal
 
+// there is one more way of creating objects, which is constructor operator
+
+function Usercreation(name) {
+  this.name = name;
+  this.isAdmin = false;
+}
+
+let person = new Usercreation("Jack");
+
 user.name = "shashank";
 delete user.name;
 console.log(user);
