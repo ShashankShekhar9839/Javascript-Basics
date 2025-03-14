@@ -1,3 +1,5 @@
+// not able to implement by self
+
 let a = [1, 2];
 let b = [1, [3, [4, 6]]];
 
